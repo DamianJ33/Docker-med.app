@@ -34,6 +34,25 @@ class PatientController(private val service: PatientService) {
         }
     }
 
+    @GetMapping("/login")
+    fun loginPatient(
+        @RequestParam("email") email: String,
+        @RequestParam("password") password: String
+    ): ResponseEntity<Any> {
+        return try {
+            val patient = service.loginPatient(email, password)
+            if (patient != null) {
+                ResponseEntity.ok(mapOf("message" to "Logowanie udane", "patient" to patient))
+            } else {
+                ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(mapOf("message" to "Nieprawidłowy email lub hasło"))
+            }
+        } catch (e: Exception) {
+            println("Błąd przy logowaniu: ${e.message}")
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(mapOf("message" to "Błąd serwera podczas logowania"))
+        }
+    }
 
 }
 
