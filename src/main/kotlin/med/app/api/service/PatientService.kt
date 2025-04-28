@@ -23,4 +23,13 @@ class PatientService(private val repository: AppRepository) {
 
         return repository.save(newPatient)
     }
+
+    fun loginPatient(email: String, password: String): Patient? {
+        val patient = repository.findByEmail(email)
+        return if (patient != null && password == patient.password) {
+            patient
+        } else {
+            null
+        }
+    }
 }
